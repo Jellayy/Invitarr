@@ -1,6 +1,8 @@
 import discord
+from discord.ext import commands
 import logging
 from configparser import ConfigParser
+from plexapi.myplex import MyPlexAccount
 
 
 # Logging
@@ -9,29 +11,38 @@ logging.basicConfig(
     format="%(asctime)s [%(name)s:%(levelname)s] %(message)s",
     handlers=[logging.StreamHandler()]
 )
-logging.getLogger('discord')
+logging.getLogger('discord.client').disabled = True
+logging.getLogger('discord.gateway').disabled = True
+logging.getLogger('plexapi').disabled = True
 
+# Load config
+parser = ConfigParser()
+parser.read('config.ini')
 
 # Initialize discord.py client
-client = discord.Client()
+intents = discord.Intents.default()
+intents.members = True
+client = commands.Bot(command_prefix='.', intents=intents)
+
+# Initialize Plex API
+logging.info(f"PLEXAPI: Logging in to: {parser.get('Plex', 'email')}")
+client.plex_account = MyPlexAccount(parser.get('Plex', 'email'), parser.get('Plex', 'password'))
+logging.info(f"PLEXAPI: Logged in!")
+logging.info(f"PLEXAPI: Connecting to server: {parser.get('Plex', 'server')}")
+client.plex_server_connection = client.plex_account.resource(parser.get('Plex', 'server')).connect()
+logging.info(f"PLEXAPI: Connected!")
+
+# Load cogs
+if parser.get('Role Monitoring', 'enable') == '1':
+    logging.info(f'DISCORD: Role Monitoring enabled')
+    client.load_extension('utils.cogs.RoleMonitoring')
 
 
 # On login
 @client.event
 async def on_ready():
-    logging.info(f'Logged in as {client.user}')
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('Hello'):
-        await message.channel.send(f'Hello {message.author}!')
+    logging.info(f'DISCORD: Logged in to Discord as {client.user}')
 
 
 # Run discord.py client
-parser = ConfigParser()
-parser.read('config.ini')
-client.run(parser.get('Discord', 'api key'))
+client.run(parser.get('Discord', 'bot token'))

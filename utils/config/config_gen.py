@@ -7,8 +7,19 @@ parser = ConfigParser()
 # Generate config
 parser['Discord'] = {
     'Command Prefix': '.',
-    'API Key': '',
-    'Monitored Role': ''
+    'Bot Token': '',
+}
+
+parser['Plex'] = {
+    'Email': '',
+    'Password': '',
+    'Server': '',
+    'Libraries': ''
+}
+
+parser['Role Monitoring'] = {
+    'Enable': '1',
+    'Monitored Role': 'testing'
 }
 
 # Write config
