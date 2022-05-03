@@ -3,6 +3,7 @@ from configparser import ConfigParser
 import logging
 import utils.utils as utils
 import utils.plex as plex
+import utils.db.db_driver as db_driver
 
 
 global monitored_role_name
@@ -27,6 +28,8 @@ class RoleMonitoring(commands.Cog):
             logging.info(f"DISCORD: {after.name} given monitored role, opening DM")
             # Open DM to obtain email
             user_email = await utils.get_user_email(self.client, after)
+            # Add user to DB
+            db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, self.client.plex_server_connection.friendlyName)
             # Send Plex invite to email
             plex.add_user(self.client.plex_account, user_email, self.client.plex_server_connection)
 
