@@ -1,0 +1,14 @@
+aiohttp==3.7.4.post0
+async-timeout==3.0.1
+attrs==21.4.0
+certifi==2020.6.20
+chardet==4.0.0
+charset-normalizer==2.0.12
+discord.py==1.7.3
+idna==3.3
+multidict==6.0.2
+PlexAPI==4.10.1
+requests==2.27.1
+typing_extensions==4.2.0
+urllib3==1.26.9
+yarl==1.7.2
