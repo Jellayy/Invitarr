@@ -14,7 +14,6 @@ parser['Plex'] = {
     'Email': '',
     'Password': '',
     'Server': '',
-    'Libraries': ''
 }
 
 parser['Role Monitoring'] = {
