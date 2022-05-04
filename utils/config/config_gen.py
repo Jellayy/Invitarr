@@ -10,10 +10,15 @@ parser['Discord'] = {
     'Bot Token': '',
 }
 
-parser['Plex'] = {
-    'Email': '',
+parser['Plex Accounts'] = {
+    'Num Accounts': '1'
+}
+
+parser['Plex Account 0'] = {
+    'User': '',
     'Password': '',
-    'Server': '',
+    'Num Servers': '1',
+    'Server 0': '',
 }
 
 parser['Role Monitoring'] = {
