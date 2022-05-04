@@ -29,14 +29,27 @@ def create_connections(parser):
     return plex_connections
 
 
+def find_optimal_server(plex_connections):
+    lowest_users = 999
+    optimal_server = {"account": None, "server": None}
+    for account in plex_connections:
+        for server in account['servers']:
+            if server is not None:
+                if len(server.systemAccounts()) < lowest_users:
+                    lowest_users = len(server.systemAccounts())
+                    optimal_server['account'] = account['account']
+                    optimal_server['server'] = server
+    return optimal_server
+
+
 def add_user(plex_account, user_email, server_connection):
     try:
-        logging.info(f"PLEXAPI: Inviting {user_email}")
+        logging.info(f"PLEXAPI: Inviting {user_email} to {server_connection.friendlyName}")
         plex_account.inviteFriend(user=user_email, server=server_connection)
-        logging.info(f"PLEXAPI: Invited {user_email}")
+        logging.info(f"PLEXAPI: Invited {user_email} to {server_connection.friendlyName}")
         return True
     except BadRequest:
-        logging.error(f'PLEXAPI: Already sharing with {user_email}')
+        logging.error(f'PLEXAPI: Already sharing with {user_email} on server {server_connection.friendlyName}')
         return False
 
 

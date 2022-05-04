@@ -28,10 +28,12 @@ class RoleMonitoring(commands.Cog):
             logging.info(f"DISCORD: {after.name} given monitored role, opening DM")
             # Open DM to obtain email
             user_email = await utils.get_user_email(self.client, after)
-            # Add user to DB
-            db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, self.client.plex_server_connection.friendlyName)
-            # Send Plex invite to email
-            plex.add_user(self.client.plex_account, user_email, self.client.plex_server_connection)
+            # Find the least crowded server
+            optimal_server = plex.find_optimal_server(self.client.plex_connections)
+            # Send Plex invite email
+            if plex.add_user(optimal_server['account'], user_email, optimal_server['server']):
+                # Add user to DB
+                db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['server'].friendlyName)
 
 
 def setup(client):
