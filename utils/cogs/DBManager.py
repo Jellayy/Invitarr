@@ -9,6 +9,7 @@ class DBManager(commands.Cog):
         self.client = client
 
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def get_db(self, ctx):
         with open('utils/db/db_print.txt', 'w') as f:
             f.write("Discord User | Plex Email | Plex Server\n")

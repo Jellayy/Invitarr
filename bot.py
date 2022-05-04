@@ -2,9 +2,9 @@ import discord
 from discord.ext import commands
 import logging
 from configparser import ConfigParser
-from plexapi.myplex import MyPlexAccount
+from utils import plex
+from utils.db import db_driver
 import sqlite3
-import utils.db.db_driver as db_driver
 
 
 # Logging
@@ -34,12 +34,7 @@ logging.info("SQLITE3: Connected!")
 db_driver.init_user_table(client.db_con, client.db_cur)
 
 # Initialize Plex API
-logging.info(f"PLEXAPI: Logging in to: {parser.get('Plex', 'email')}")
-client.plex_account = MyPlexAccount(parser.get('Plex', 'email'), parser.get('Plex', 'password'))
-logging.info(f"PLEXAPI: Logged in!")
-logging.info(f"PLEXAPI: Connecting to server: {parser.get('Plex', 'server')}")
-client.plex_server_connection = client.plex_account.resource(parser.get('Plex', 'server')).connect()
-logging.info(f"PLEXAPI: Connected!")
+client.plex_connections = plex.create_connections(parser)
 
 # Load cogs
 if parser.get('Role Monitoring', 'enable') == '1':
