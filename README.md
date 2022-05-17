@@ -36,6 +36,7 @@ docker run -d \
   jellayy/invitarr:latest
 ```
 Note: It is recommended to set 'restart' to 'no' until you have populated your config.ini file. After finishing the setup process, feel free to change 'restart' to 'unless-stopped'
+
 4. Run the bot once to generate an empty config.ini file in the /config directory
 5. Configure the `config.ini` file
 ```
