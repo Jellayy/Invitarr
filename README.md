@@ -1,3 +1,7 @@
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jellayy/invitarr/Build%20Docker%20images?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/jellayy/invitarr?style=for-the-badge)
+![Docker Pulls](https://img.shields.io/docker/pulls/jellayy/invitarr?style=for-the-badge)
+
 Inspired by: [Sleepingpirates/Invitarr](https://github.com/Sleepingpirates/Invitarr)
 <br>
 Invitarr is a discord bot that automates and manages inviting users in a Discord server to a Plex server.
