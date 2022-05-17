@@ -9,15 +9,35 @@ Invitarr can:
  - Store users' invite information in a local database
  - More coming soon!
 ## Installation & Usage
-Once Invitarr reaches a good featureset, it will be released to easily pull into docker. For now, you can manually run the app using the steps below:
-<br>
 1. Create a bot on the [Discord Applications page](https://discord.com/developers/applications)
 2. Make sure your bot has access to the `GUILD_MEMBERS` intent
-3. Clone the repository
+3. Deploy the bot using one of the methods below:
+### Docker Compose
 ```
-git clone https://github.com/Jellayy/Invitarr.git
+---
+version: "2.1"
+services:
+  invitarr:
+    image: jellayy/invitarr:latest
+    container_name: invitarr
+    environment:
+      - TZ=America/Phoenix
+    volumes:
+      - /path/to/data:/config
+    restart: no
 ```
-4. Configure the `config.ini` file
+### Docker CLI
+```
+docker run -d \
+  --name=invitarr \
+  -e TZ=America/Phoenix \
+  -v /path/to/data:/config \
+  --restart no \
+  jellayy/invitarr:latest
+```
+Note: It is recommended to set 'restart' to 'no' until you have populated your config.ini file. After finishing the setup process, feel free to change 'restart' to 'unless-stopped'
+4. Run the bot once to generate an empty config.ini file in the /config directory
+5. Configure the `config.ini` file
 ```
 [Discord]
 command prefix = .
@@ -62,14 +82,6 @@ server 0 = YOUR_SERVER_NAME
 enable = 1
 monitored role = YOUR_DISCORD_ROLE_NAME
 ```
-5. Install dependencies
-```
-pip install -r requirements.txt
-```
-6. Run
-```
-python bot.py
-```
-Assuming you have configured everything correctly, Invitarr will send DM invites to any user that recieves the configures monitored role. Make sure your users have their DMs open!
+Assuming you have configured everything correctly, Invitarr will send DM invites to any user that receives the configured monitored role. Make sure your users have their DMs open!
 ## Commands
 `.get_db` Sends a txt copy of the user DB to discord. This contains users' Plex emails. If your users don't want these publicly shared, restrict the bot's access to public channels.
