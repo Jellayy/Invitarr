@@ -41,6 +41,9 @@ intents = discord.Intents.default()
 intents.members = True
 client = commands.Bot(command_prefix='.', intents=intents)
 
+# Pass config parser to client
+client.parser = parser
+
 # Initialize db
 logging.info("SQLITE3: Connecting to DB")
 client.db_con = sqlite3.connect('/config/invitarr.db')
@@ -49,11 +52,11 @@ logging.info("SQLITE3: Connected!")
 db_driver.init_user_table(client.db_con, client.db_cur)
 
 # Initialize Plex API
-client.plex_connections = plex.create_connections(parser)
+client.plex_connections = plex.create_connections(client.parser)
 
 # Load cogs
-if parser.get('Role Monitoring', 'enable') == '1':
-    logging.info(f'DISCORD: Role Monitoring enabled')
+if client.parser.get('Role Monitoring', 'enable') == '1':
+    logging.info(f'INIT: Role Monitoring enabled in config')
     client.load_extension('utils.cogs.RoleMonitoring')
 client.load_extension('utils.cogs.DBManager')
 
