@@ -15,7 +15,7 @@ async def email_success():
     embed = discord.Embed(
         color=discord.Color.green(),
         title="Invite Sent",
-        description="Check your Plex account for a friend request"
+        description="Check your Plex account for a friend request. An email with overseerr login information has also been sent, login as an overseerr user for requests"
     )
     return embed
 

@@ -27,10 +27,15 @@ def gen_empty_config():
         'Monitored Role': 'testing'
     }
 
+    parser['Overseerr Settings'] = {
+        'Overseerr Server': 'url',
+        'API Key': 'xxx'
+    }
+
     # Write config
     with open('/config/config.ini', 'w') as f:
         parser.write(f)
 
 
 if __name__ == "__main__":
-    main()
+    gen_empty_config()
