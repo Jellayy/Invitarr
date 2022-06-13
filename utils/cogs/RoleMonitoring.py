@@ -4,6 +4,7 @@ import logging
 import utils.utils as utils
 import utils.plex as plex
 import utils.db.db_driver as db_driver
+import utils.overseerr as overseerr
 
 
 global monitored_role_name
@@ -36,7 +37,7 @@ class RoleMonitoring(commands.Cog):
                     # Find the least crowded server
                     optimal_server = plex.find_optimal_server(self.client.plex_connections)
                     # Send Plex invite email
-                    if plex.add_user(optimal_server['account'], user_email, optimal_server['server']):
+                    if plex.add_user(optimal_server['account'], user_email, optimal_server['server'] & overseerr.create_user(overseerr_api, overseerr_server, user_email)):
                         # Add user to DB
                         db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email,optimal_server['server'].friendlyName)
 
@@ -45,6 +46,10 @@ def setup(client):
     # Load monitored role name from config
     global monitored_role_name
     monitored_role_name = client.parser.get('Role Monitoring', 'monitored role')
+    global overseerr_server
+    overseerr_server = client.parser.get('Overseerr Settings', 'Overseerr Server')
+    global overseerr_api
+    overseerr_api = client.parser.get('Overseerr Settings', 'API Key')
 
     # Add Cog
     logging.info("DISCORD: Adding cog: RoleMonitoring")
