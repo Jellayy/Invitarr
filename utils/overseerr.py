@@ -15,7 +15,7 @@ def create_user(overseerr_api, overseerr_server, user_email):
         'username': user_email,
     }
 
-    response = requests.post(overseerr_server, headers=headers, json=json_data)
+    response = requests.post(overseerr_server+'/api/v1/user', headers=headers, json=json_data)
 
     logging.info(response.json())
     logging.info('Added User to overseerr')
