@@ -37,7 +37,7 @@ class RoleMonitoring(commands.Cog):
                     # Find the least crowded server
                     optimal_server = plex.find_optimal_server(self.client.plex_connections)
                     # Send Plex invite email
-                    if plex.add_user(optimal_server['account'], user_email, optimal_server['server'] & overseerr.create_user(overseerr_api, overseerr_server, user_email)):
+                    if plex.add_user(optimal_server['account'], user_email, optimal_server['server']) & overseerr.create_user(overseerr_api, overseerr_server, user_email):
                         # Add user to DB
                         db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email,optimal_server['server'].friendlyName)
 
