@@ -3,14 +3,26 @@ from plexapi.exceptions import NotFound, BadRequest
 import logging
 
 
+def plex_login(user, password):
+    logging.info(f"PLEXAPI: Logging into Account: {parser.get(f'Plex Account {x}', 'user')}")
+    success = False
+    while not success:
+        try:
+            plex_account = MyPlexAccount(user, password)
+            success = True
+        except BadRequest as e:
+            logging.error(f"PLEXAPI: Login to account: {user} failed with status: {e}, retrying")
+    logging.info(f"PLEXAPI: Logged in!")
+
+    return plex_account
+
+
 def create_connections(parser):
     plex_connections = []
     # For Each Plex Account in Config
     for x in range(int(parser.get('Plex Accounts', 'num accounts'))):
         # Log into account
-        logging.info(f"PLEXAPI: Logging into Account: {parser.get(f'Plex Account {x}', 'user')}")
-        plex_account = MyPlexAccount(parser.get(f'Plex Account {x}', 'user'), parser.get(f'Plex Account {x}', 'password'))
-        logging.info(f"PLEXAPI: Logged in!")
+        plex_account = plex_login(parser.get(f'Plex Account {x}', 'user'), parser.get(f'Plex Account {x}', 'password'))
         # Store account
         plex_connections.append({"account": plex_account, "servers": []})
 
