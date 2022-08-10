@@ -44,15 +44,15 @@ client = commands.Bot(command_prefix='.', intents=intents)
 # Pass config parser to client
 client.parser = parser
 
+# Initialize Plex API
+client.plex_connections = plex.create_connections(client.parser)
+
 # Initialize db
 logging.info("SQLITE3: Connecting to DB")
 client.db_con = sqlite3.connect('/config/invitarr.db')
 client.db_cur = client.db_con.cursor()
 logging.info("SQLITE3: Connected!")
-db_driver.init_user_table(client.db_con, client.db_cur)
-
-# Initialize Plex API
-client.plex_connections = plex.create_connections(client.parser)
+db_driver.init_user_table(client.db_con, client.db_cur, client.plex_connections)
 
 # Load cogs
 if client.parser.get('Role Monitoring', 'enable') == '1':

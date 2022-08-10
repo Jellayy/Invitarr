@@ -1,17 +1,19 @@
 from plexapi.myplex import MyPlexAccount
 from plexapi.exceptions import NotFound, BadRequest
 import logging
+import time
 
 
 def plex_login(user, password):
-    logging.info(f"PLEXAPI: Logging into Account: {parser.get(f'Plex Account {x}', 'user')}")
+    logging.info(f"PLEXAPI: Logging into Account: {user}")
     success = False
     while not success:
         try:
             plex_account = MyPlexAccount(user, password)
             success = True
         except BadRequest as e:
-            logging.error(f"PLEXAPI: Login to account: {user} failed with status: {e}, retrying")
+            logging.error(f"PLEXAPI: Login to account: {user} failed with status: {e}, retrying in 30sec")
+            time.sleep(30)
     logging.info(f"PLEXAPI: Logged in!")
 
     return plex_account
@@ -65,12 +67,5 @@ def add_user(plex_account, user_email, server_connection):
         return False
 
 
-def remove_user(plex_account, user_email):
-    try:
-        logging.info(f"PLEXAPI: Removing friend {user_email}")
-        plex_account.removeFriend(user=user_email)
-        logging.info(f"PLEXAPI: {user_email} removed")
-        return True
-    except NotFound:
-        logging.error(f"PLEXAPI: {user_email} not found in friends list")
-        return False
+# def remove_user(user_email):
+
