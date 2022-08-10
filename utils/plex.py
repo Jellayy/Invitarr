@@ -76,3 +76,6 @@ def remove_user(plex_account, user_email):
     except NotFound:
         logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email}: not sharing with this user")
         return False
+    except Exception as e:
+        logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email} due to unhandled exception: {e}")
+        return False

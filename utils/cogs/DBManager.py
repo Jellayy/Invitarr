@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import utils.db.db_driver as db_driver
+import logging
 
 
 class DBManager(commands.Cog):
@@ -21,4 +22,6 @@ class DBManager(commands.Cog):
 
 def setup(client):
     # Add Cog
+    logging.info("DISCORD: Adding cog: DBManager")
     client.add_cog(DBManager(client))
+    logging.info("DISCORD: DBManager Cog loaded!")

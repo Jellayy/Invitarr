@@ -54,3 +54,21 @@ async def dm_cancelled():
         description="Signup cancelled, feel free to readd the associated role at any time to be reinvited"
     )
     return embed
+
+
+async def generic_success(message):
+    embed = discord.Embed(
+        color=discord.Color.green(),
+        title="Success",
+        description=message
+    )
+    return embed
+
+
+async def generic_failure(message):
+    embed = discord.Embed(
+        color=discord.Color.red(),
+        title="Failed",
+        description=message
+    )
+    return embed
