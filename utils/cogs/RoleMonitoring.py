@@ -33,23 +33,26 @@ class RoleMonitoring(commands.Cog):
             if role not in before.roles:
                 logging.info(f"DISCORD: User: {after.name} gained role: {role.name}")
                 if role == monitored_role:
-                    if db_driver.search_user(self.client.db_cur, after.name):
+                    if db_driver.check_user(self.client.db_cur, after.name):
                         logging.info(f"SQLITE3: {after.name} already in DB, skipping")
                     else:
                         logging.info(f"DISCORD: {after.name} gained monitored role, opening DM")
                         # Open DM to obtain email
                         user_email = await utils.get_user_email(self.client, after)
-                        # Find the least crowded server
-                        optimal_server = plex.find_optimal_server(self.client.plex_connections)
-                        # Send Plex invite email
-                        if plex.add_user(optimal_server['account'], user_email, optimal_server['server']):
-                            overseerr_account_id = overseerr.create_user(overseerr_api, overseerr_server, user_email)
-                            if overseerr_account_id is not None:
-                                # Add user to DB
-                                db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, overseerr_account_id)
-                            else:
-                                # Add user to DB with no overseer
-                                db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, "None")
+                        if user_email is not None:
+                            # Find the least crowded server
+                            optimal_server = plex.find_optimal_server(self.client.plex_connections)
+                            # Send Plex invite email
+                            if plex.add_user(optimal_server['account'], user_email, optimal_server['server']):
+                                overseerr_account_id = overseerr.create_user(overseerr_api, overseerr_server, user_email)
+                                if overseerr_account_id is not None:
+                                    # Add user to DB
+                                    db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, overseerr_account_id)
+                                else:
+                                    # Add user to DB with no overseer
+                                    db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, "None")
+                        else:
+                            logging.info(f"DISCORD: {after.name} cancelled DM conversation")
 
 
 def setup(client):

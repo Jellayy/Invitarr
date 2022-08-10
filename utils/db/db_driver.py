@@ -32,13 +32,33 @@ def get_users(cur):
     return rows
 
 
-# Search DB for user
-def search_user(cur, discord_user):
+# Check DB if user exists
+def check_user(cur, discord_user):
     cur.execute("SELECT count(*) FROM users_v2 WHERE discord_user=:user", {"user": discord_user})
     if cur.fetchone()[0] >= 1:
         return True
     else:
         return False
+
+
+# Check DB if user exists
+def check_user_email(cur, user_email):
+    cur.execute("SELECT count(*) FROM users_v2 WHERE user_plex_email=:email", {"email": user_email})
+    if cur.fetchone()[0] >= 1:
+        return True
+    else:
+        return False
+
+
+# Grab user info from DB given email
+def grab_user(cur, user_email):
+    cur.execute("SELECT * FROM users_v2 WHERE user_plex_email=:email", {"email": user_email})
+    return cur.fetchone()
+
+
+def delete_user(cur, con, user_email):
+    cur.execute("DELETE FROM users_v2 WHERE user_plex_email=:email", {"email": user_email})
+    con.commit()
 
 
 # Convert a V1 table to a V2 table

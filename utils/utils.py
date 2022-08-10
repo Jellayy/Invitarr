@@ -1,6 +1,7 @@
 from asyncio import TimeoutError
 import utils.embeds as embeds
 import re
+import utils.db.db_driver as db_driver
 
 
 # Creates a DM conversation with a discord user to obtain their email
@@ -12,9 +13,15 @@ async def get_user_email(client, user):
             return m.author == user
         try:
             message = await client.wait_for('message', timeout=86400, check=check_sender)
-            if check_email(message.content):
-                user_email = message.content
-                await user.send(embed=await embeds.email_success())
+            if message.content.lower() == "cancel":
+                await user.send(embed=await embeds.dm_cancelled())
+                return None
+            elif check_email(message.content):
+                if db_driver.check_user_email(client.db_cur, message.content):
+                    await user.send(embed=await embeds.email_in_use())
+                else:
+                    user_email = message.content
+                    await user.send(embed=await embeds.email_success())
             else:
                 await user.send(embed=await embeds.invalid_email())
         except TimeoutError:

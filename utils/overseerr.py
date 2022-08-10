@@ -13,6 +13,7 @@ def build_headers(overseerr_api):
 
 
 def create_user(overseerr_api, overseerr_server, user_email):
+    logging.info(f"OVERSEERR: Creating account for: {user_email}")
     json_data = {
         'email': user_email,
         'username': user_email,
@@ -31,14 +32,15 @@ def create_user(overseerr_api, overseerr_server, user_email):
 
 
 def delete_user(overseerr_api, overseerr_server, user_id):
+    logging.info(f"OVERSEERR: Removing account ID: {user_id}")
     r = requests.delete(f"{overseerr_server}/api/v1/user/{user_id}", headers=build_headers(overseerr_api))
 
     if r.status_code == 200:
-        print(f"OVERSEERR: Deleted account ID: {user_id} successfully!")
+        logging.info(f"OVERSEERR: Deleted account ID: {user_id} successfully!")
         return True
     elif r.status_code == 404:
-        print(f"OVERSEERR: Cannot delete account ID: {user_id}, account does not exist.")
+        logging.error(f"OVERSEERR: Cannot delete account ID: {user_id}, account does not exist.")
         return False
     else:
-        print(f"OVERSEERR: Account ID: {user_id} deletion failed with unhandled status code: {r.status_code} json: {r.json()}")
+        logging.error(f"OVERSEERR: Account ID: {user_id} deletion failed with unhandled status code: {r.status_code} json: {r.json()}")
         return False

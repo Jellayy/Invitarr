@@ -67,5 +67,12 @@ def add_user(plex_account, user_email, server_connection):
         return False
 
 
-# def remove_user(user_email):
-
+def remove_user(plex_account, user_email):
+    try:
+        logging.info(f"PLEXAPI: Removing {user_email} from shares on account: {plex_account.email}")
+        plex_account.removeFriend(user_email)
+        logging.info(f"PLEXAPI: Removed {user_email} from shares on account: {plex_account.email}")
+        return True
+    except NotFound:
+        logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email}: not sharing with this user")
+        return False

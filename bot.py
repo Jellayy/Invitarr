@@ -59,6 +59,7 @@ if client.parser.get('Role Monitoring', 'enable') == '1':
     logging.info(f'INIT: Role Monitoring enabled in config')
     client.load_extension('utils.cogs.RoleMonitoring')
 client.load_extension('utils.cogs.DBManager')
+client.load_extension('utils.cogs.Administration')
 
 
 # On login
