@@ -64,14 +64,17 @@ def delete_user(cur, con, user_email):
 # Convert a V1 table to a V2 table
 def convert_v1_v2(con, cur, plex_connections):
     cur.execute(''' CREATE TABLE users_v2 (discord_user, user_plex_email, server_account, server_friendly_name, server_id, overseer_account_id) ''')
+    rows = []
     for row in cur.execute("SELECT * FROM users"):
+        rows.append(row)
+    for row in rows:
         for plex_server_account in plex_connections:
             for server in plex_server_account['servers']:
                 if server.friendlyName == row[2]:
                     server_id = server.machineIdentifier
                     server_account = plex_server_account['account'].email
         cur.execute("INSERT INTO users_v2 VALUES (?, ?, ?, ?, ?, ?)", (row[0], row[1], server_account, row[2], server_id, "None"))
-        logging.info(f"SQLITE3: Record: ({row[0]}, {row[1]}, {server_account}, {row[2]}, {server_id}, False) transferred to v2 table")
+        logging.info(f"SQLITE3: Record: ({row[0]}, {row[1]}, {server_account}, {row[2]}, {server_id}, None) transferred to v2 table")
     logging.info(f"SQLITE3: v2 table complete!")
     cur.execute("DROP TABLE users")
     logging.info(f"SQLITE3: v1 table deleted!")
