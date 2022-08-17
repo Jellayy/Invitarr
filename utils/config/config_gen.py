@@ -27,6 +27,10 @@ def gen_empty_config():
         'Monitored Role': 'testing'
     }
 
+    parser['Overseerr Account Management'] = {
+        'Enable': '1'
+    }
+
     parser['Overseerr Settings'] = {
         'Overseerr Server': 'url',
         'API Key': 'xxx'

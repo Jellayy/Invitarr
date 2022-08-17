@@ -36,3 +36,39 @@ async def email_timeout():
         description="No valid email was provided within 24 hours, please contact a server administrator to be re-invited"
     )
     return embed
+
+
+async def email_in_use():
+    embed = discord.Embed(
+        color=discord.Color.red(),
+        title="Email In Use",
+        description="This email is already in use by another user on this server, please contact your administrator"
+    )
+    return embed
+
+
+async def dm_cancelled():
+    embed = discord.Embed(
+        color=discord.Color.red(),
+        title="DM Cancelled",
+        description="Signup cancelled, feel free to readd the associated role at any time to be reinvited"
+    )
+    return embed
+
+
+async def generic_success(message):
+    embed = discord.Embed(
+        color=discord.Color.green(),
+        title="Success",
+        description=message
+    )
+    return embed
+
+
+async def generic_failure(message):
+    embed = discord.Embed(
+        color=discord.Color.red(),
+        title="Failed",
+        description=message
+    )
+    return embed

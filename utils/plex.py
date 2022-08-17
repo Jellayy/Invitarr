@@ -1,6 +1,22 @@
 from plexapi.myplex import MyPlexAccount
 from plexapi.exceptions import NotFound, BadRequest
 import logging
+import time
+
+
+def plex_login(user, password):
+    logging.info(f"PLEXAPI: Logging into Account: {user}")
+    success = False
+    while not success:
+        try:
+            plex_account = MyPlexAccount(user, password)
+            success = True
+        except BadRequest as e:
+            logging.error(f"PLEXAPI: Login to account: {user} failed with status: {e}, retrying in 30sec")
+            time.sleep(30)
+    logging.info(f"PLEXAPI: Logged in!")
+
+    return plex_account
 
 
 def create_connections(parser):
@@ -8,9 +24,7 @@ def create_connections(parser):
     # For Each Plex Account in Config
     for x in range(int(parser.get('Plex Accounts', 'num accounts'))):
         # Log into account
-        logging.info(f"PLEXAPI: Logging into Account: {parser.get(f'Plex Account {x}', 'user')}")
-        plex_account = MyPlexAccount(parser.get(f'Plex Account {x}', 'user'), parser.get(f'Plex Account {x}', 'password'))
-        logging.info(f"PLEXAPI: Logged in!")
+        plex_account = plex_login(parser.get(f'Plex Account {x}', 'user'), parser.get(f'Plex Account {x}', 'password'))
         # Store account
         plex_connections.append({"account": plex_account, "servers": []})
 
@@ -55,10 +69,13 @@ def add_user(plex_account, user_email, server_connection):
 
 def remove_user(plex_account, user_email):
     try:
-        logging.info(f"PLEXAPI: Removing friend {user_email}")
-        plex_account.removeFriend(user=user_email)
-        logging.info(f"PLEXAPI: {user_email} removed")
+        logging.info(f"PLEXAPI: Removing {user_email} from shares on account: {plex_account.email}")
+        plex_account.removeFriend(user_email)
+        logging.info(f"PLEXAPI: Removed {user_email} from shares on account: {plex_account.email}")
         return True
     except NotFound:
-        logging.error(f"PLEXAPI: {user_email} not found in friends list")
+        logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email}: not sharing with this user")
+        return False
+    except Exception as e:
+        logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email} due to unhandled exception: {e}")
         return False
