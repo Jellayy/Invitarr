@@ -5,6 +5,16 @@
 Inspired by: [Sleepingpirates/Invitarr](https://github.com/Sleepingpirates/Invitarr)
 <br>
 Invitarr is a discord bot that automates and manages inviting users in a Discord server to a Plex server.
+
+## Sections
+- [Features](#features)
+- [Installation](#installation)
+  - [Register your Discord Bot](#register-your-discord-bot)
+  - [Deploy to Docker](#deploy-to-docker)
+  - [Updating to v2.0](#updating-to-v20)
+- [Usage](#usage)
+  - [Commands](#commands)
+
 ## Features
 Invitarr can:
  - Use the Plex API to connect to multiple Plex accounts and servers at once
@@ -13,11 +23,12 @@ Invitarr can:
  - Create Overseerr accounts for invited users to send requests
  - Store users' Plex and Overseerr information in a local database for state management
  - More coming soon!
-## Installation & Usage
+## Installation
+### Register your Discord bot
 1. Create a bot on the [Discord Applications page](https://discord.com/developers/applications)
 2. Make sure your bot has access to the `GUILD_MEMBERS` intent
-3. Deploy the bot using one of the methods below:
-### Docker Compose
+### Deploy to Docker
+#### Docker Compose
 ```
 ---
 version: "2.1"
@@ -30,7 +41,7 @@ services:
     volumes:
       - /path/to/data:/config
 ```
-### Docker CLI
+#### Docker CLI
 ```
 docker run -d \
   --name=invitarr \
@@ -39,9 +50,9 @@ docker run -d \
   jellayy/invitarr:latest
 ```
 Note: It is recommended to omit any restart policy until you have populated your config.ini file. After finishing the setup process, feel free to change 'restart' to 'unless-stopped'
-
-4. Run the bot once to generate an empty config.ini file in the /config directory
-5. Configure the `config.ini` file:
+### Configure
+1. Run the bot once to generate an empty config.ini file in the /config directory
+2. Configure the `config.ini` file:
 ```
 [Discord]
 command prefix = .
@@ -97,7 +108,12 @@ overseerr server = http://YOUR.OVERSEERR.ADDRESS
 api key = YOUR_OVERSEERR_KEY
 ```
 Assuming you have configured everything correctly, Invitarr will send DM invites to any user that receives the configured monitored role. Make sure your users have their DMs open!
-## Commands
+### Updating to v2.0
+Invitarr v2.0 uses an updated database structure that stores more information to allow for easier implementation of features going into the future. If Invitarr v2.0 detects a v1.x database, it will recreate it as a 2.0 database. This process has proven to be pretty stable; however, it is still recommended to backup your v1.x database before updating to v2.0 in the event that anything goes wrong during the update. Your database file can be found at `/config/invitarr.db`
+
+## Usage
+
+### Commands
 `.get_db` (Administrator needed) Sends a txt copy of the user DB to discord. This contains a lot of identifying information about both your users and your own plex account. If you don't want these publicly shared, restrict the bot's access to public channels.
 
 `.delete_user EMAIL` (Administrator needed) Removes a given user from plex shares and deletes their associated Overseerr account if available.
