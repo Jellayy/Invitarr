@@ -116,6 +116,8 @@ Invitarr v2.0 uses an updated database structure that stores more information to
 ### Commands
 `.get_db` (Administrator needed) Sends a txt copy of the user DB to discord. This contains a lot of identifying information about both your users and your own plex account. If you don't want these publicly shared, restrict the bot's access to public channels.
 
+`.add_user @USER EMAIL (OPT)CREATE_OVERSEERR_ACCOUNT[True/False]` (Administrator needed) Admin command for manually sharing, creating an overseerr account, and adding a user to the database. Bypasses standard rolemonitoring limitation of one invite and overseerr account per discord user. Error handling currently not the most fleshed out, feel free to create issues as unhandled cases arise.
+
 `.delete_user EMAIL` (Administrator needed) Removes a given user from plex shares and deletes their associated Overseerr account if available.
 
 `.force_delete_user EMAIL` (Administrator needed) Sometimes, due to users not accepting plex invites or API failures, the database can become out of sync to the point where `.delete_user` can no longer safely remove users. Use this to bypass all checks and attempt to forcibly purge a user from Plex, Overseerr, and the database. No matter the status of the user in Plex/Overseerr, this command will remove that user from the database and must have the monitored role reinstated to be managed by Invitarr. Naturally very destructive so only use when `.delete_user` cannot be used.
