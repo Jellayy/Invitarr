@@ -41,21 +41,10 @@ class RoleMonitoring(commands.Cog):
                         # Open DM to obtain email
                         user_email = await utils.get_user_email(self.client, after)
                         if user_email is not None:
-                            # Find the least crowded server
-                            optimal_server = plex.find_optimal_server(self.client.plex_connections)
-                            # Send Plex invite email
-                            if plex.add_user(optimal_server['account'], user_email, optimal_server['server']):
-                                if overseerr_enabled:
-                                    overseerr_account_id = overseerr.create_user(overseerr_api, overseerr_server, user_email)
-                                    if overseerr_account_id is not None:
-                                        # Add user to DB
-                                        db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, overseerr_account_id)
-                                    else:
-                                        # Add user to DB with no overseer
-                                        db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, "None")
-                                else:
-                                    # Add user to DB with no overseer
-                                    db_driver.add_user(self.client.db_con, self.client.db_cur, after.name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, "None")
+                            if overseerr_enabled:
+                                utils.add_user(self.client, user_email, after.name, True, overseerr_api, overseerr_server)
+                            else:
+                                utils.add_user(self.client, user_email, after.name)
                         else:
                             logging.info(f"DISCORD: {after.name} cancelled DM conversation")
 

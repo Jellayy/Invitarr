@@ -4,6 +4,7 @@ import utils.db.db_driver as db_driver
 import utils.plex as plex
 import utils.overseerr as overseerr
 import utils.embeds as embeds
+import utils.utils as utils
 import logging
 
 
@@ -64,6 +65,21 @@ class Administration(commands.Cog):
             await ctx.send(embed=await embeds.generic_success(f"Plex share: {plex_share}\nOverseerr account: {overseerr_account}\nDB listing: deleted"))
         else:
             await ctx.send(embed=await embeds.generic_failure(f"email: {user_email} not found in DB"))
+
+    @commands.command()
+    @commands.has_permissions(administrator=True)
+    async def add_user(self, ctx, user: str = None, user_email: str = None, create_overseerr_account: str = "FALSE"):
+        if user is None or user_email is None:
+            await ctx.send(embed=await embeds.generic_failure("Missing Parameters\nUsage:\nadd_user @USER USER_EMAIL CREATE_OVERSEERR_ACCOUNT[optional, True]"))
+        else:
+            user = await self.client.fetch_user(user.replace("<@", "").replace(">", ""))
+            user_name = user.name
+            if overseerr_enabled and create_overseerr_account.upper() == "TRUE":
+                if utils.add_user(self.client, user_email, user_name, True, overseerr_api, overseerr_server):
+                    await ctx.send(embed=await embeds.generic_success("User added!"))
+            else:
+                if utils.add_user(self.client, user_email, user_name):
+                    await ctx.send(embed=await embeds.generic_success("User added!"))
 
 
 def setup(client):
