@@ -96,11 +96,15 @@ class Administration(commands.Cog):
                     users_to_prune = []
                     all_users = plex.get_users(plex_connection['account'])
                     for user in all_users:
-                        user_server_id = db_driver.grab_user(self.client.db_cur, user['email'])[4]
-                        for server in plex_connection['servers']:
-                            if server.machineIdentifier == user_server_id:
-                                if not server.history(account_id=user['id']):
-                                    users_to_prune.append(user['id'])
+                        # statement for debug, remove in prod
+                        print(db_driver.grab_user(self.client.db_cur, user['email']))
+                        # this line is necessary to prevent crashes when db_driver screws up
+                        if db_driver.grab_user(self.client.db_cur, user['email']) is not None:
+                            user_server_id = db_driver.grab_user(self.client.db_cur, user['email'])[4]
+                            for server in plex_connection['servers']:
+                                if server.machineIdentifier == user_server_id:
+                                    if not server.history(accountID=user['id']):
+                                        users_to_prune.append(user['email'])
 
                     # TODO: Generalize this method
                     for user_email in users_to_prune:
