@@ -91,7 +91,6 @@ def get_users(plex_connections, account_email):
         for account in plex_connections:
             if account['account'].email == account_email:
                 for user in account['account'].users():
-                    print(user.email, user.username, user.id)
                     users[user.id] = user.email
         return users
     except Exception as e:
@@ -102,7 +101,7 @@ def get_users(plex_connections, account_email):
 
 def get_history(plex_connections, account_id, account_email):
     try:
-        logging.info(f"PLEXAPI: Gettings history for {account_email}")
+        logging.info(f"PLEXAPI: Gettings history for {account_id}")
         for account in plex_connections:
             if account['account'].email == account_email:
                 for server in account['servers']:

@@ -93,11 +93,9 @@ class Administration(commands.Cog):
             user_dict = utils.get_users(self.client, account_email)
             print(user_dict)
             for account_id in user_dict.keys():
-                print(utils.get_history(self.client, account_id, account_email))
                 if not utils.get_history(self.client, account_id, account_email):
-                    print("user has not watched anything")
+                    logging.info(f"User {account_id} has not watched anything, adding to prune list")
                     users_to_prune.append(user_dict.get(account_id))
-                    print(user_dict.get(account_id))
 
 
             await ctx.send(embed=await embeds.user_list(users_to_prune, len(users_to_prune), account_email))
