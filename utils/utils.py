@@ -13,7 +13,6 @@ async def get_user_email(client, user):
     while user_email is None:
         def check_sender(m):
             return m.author == user
-
         try:
             message = await client.wait_for('message', timeout=86400, check=check_sender)
             if message.content.lower() == "cancel":
@@ -43,19 +42,13 @@ def add_user(client, user_email, user_name, overseerr_enabled: bool = False, ove
             overseerr_account_id = overseerr.create_user(overseerr_api, overseerr_server, user_email)
             if overseerr_account_id is not None:
                 # Add user to DB
-                db_driver.add_user(client.db_con, client.db_cur, user_name, user_email, optimal_server['account'].email,
-                                   optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier,
-                                   overseerr_account_id)
+                db_driver.add_user(client.db_con, client.db_cur, user_name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, overseerr_account_id)
             else:
                 # Add user to DB with no overseer
-                db_driver.add_user(client.db_con, client.db_cur, user_name, user_email, optimal_server['account'].email,
-                                   optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier,
-                                   "None")
+                db_driver.add_user(client.db_con, client.db_cur, user_name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, "None")
         else:
             # Add user to DB with no overseer
-            db_driver.add_user(client.db_con, client.db_cur, user_name, user_email, optimal_server['account'].email,
-                               optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier,
-                               "None")
+            db_driver.add_user(client.db_con, client.db_cur, user_name, user_email, optimal_server['account'].email, optimal_server['server'].friendlyName, optimal_server['server'].machineIdentifier, "None")
 
         return True
 
