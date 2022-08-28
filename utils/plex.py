@@ -86,7 +86,7 @@ def remove_user(plex_account, user_email):
 
 def get_users(plex_connections, account_email):
     try:
-        logging.info(f"PLEXAPI: Gettings users from ")
+        logging.info(f"PLEXAPI: Gettings users from {account_email}")
         users = {}
         for account in plex_connections:
             if account['account'].email == account_email:
@@ -101,8 +101,15 @@ def get_users(plex_connections, account_email):
 
 
 def get_history(plex_connections, account_id, account_email):
-    for account in plex_connections:
-        if account['account'].email == account_email:
-            for server in account['servers']:
-                history = server.history(accountID=account_id)
-                return history
+    try:
+        logging.info(f"PLEXAPI: Gettings history for {account_email}")
+        for account in plex_connections:
+            if account['account'].email == account_email:
+                for server in account['servers']:
+                    history = server.history(accountID=account_id)
+                    return history
+    except Exception as e:
+        logging.error(
+            f"PLEXAPI: Here's a generic error messages idiot {e}")
+        return []
+
