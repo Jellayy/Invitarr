@@ -1,6 +1,5 @@
 from plexapi.myplex import MyPlexAccount
 from plexapi.exceptions import NotFound, BadRequest
-import plexapi.server
 import logging
 import time
 

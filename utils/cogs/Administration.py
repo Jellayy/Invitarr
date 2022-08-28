@@ -6,7 +6,6 @@ import utils.overseerr as overseerr
 import utils.embeds as embeds
 import utils.utils as utils
 import logging
-from discord.utils import get
 
 global overseerr_server
 global overseerr_api
@@ -90,16 +89,14 @@ class Administration(commands.Cog):
                 "Missing Parameters\nUsage:\ndry_prune account server_num"))
         else:
             users_to_prune = []
-            user_dict = utils.get_users(self.client, account_email)
+            user_dict = plex.get_users(self.client.plex_connections, account_email)
             print(user_dict)
             for account_id in user_dict.keys():
-                if not utils.get_history(self.client, account_id, account_email):
+                if not plex.get_history(self.client.plex_connections, account_id, account_email):
                     logging.info(f"User {account_id} has not watched anything, adding to prune list")
                     users_to_prune.append(user_dict.get(account_id))
-
-
             await ctx.send(embed=await embeds.user_list(users_to_prune, len(users_to_prune), account_email))
-            # for user in users_to_prune:
+
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -109,14 +106,13 @@ class Administration(commands.Cog):
                 "Missing Parameters\nUsage:\ndry_prune account server_num"))
         else:
             users_to_prune = []
-            user_dict = utils.get_users(self.client, account_email)
+            user_dict = plex.get_users(self.client.plex_connections, account_email)
             print(user_dict)
             for account_id in user_dict.keys():
-                print(utils.get_history(self.client, account_id, account_email))
-                if not utils.get_history(self.client, account_id, account_email):
-                    print("user has not watched anything")
+                if not plex.get_history(self.client.plex_connections, account_id, account_email):
+                    logging.info(f"User {account_id} has not watched anything, adding to prune list")
                     users_to_prune.append(user_dict.get(account_id))
-                    print(user_dict.get(account_id))
+            await ctx.send(embed=await embeds.user_list(users_to_prune, len(users_to_prune), account_email))
 
 
             await ctx.send(embed=await embeds.user_list(users_to_prune, len(users_to_prune), account_email))
