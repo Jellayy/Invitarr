@@ -72,3 +72,12 @@ async def generic_failure(message):
         description=message
     )
     return embed
+
+
+async def user_list(message, no_watch, account):
+    embed = discord.Embed(
+        color=discord.Color.green(),
+        title=f"{no_watch} users have not watched anything on {account}",
+        description=message
+    )
+    return embed

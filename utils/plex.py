@@ -1,5 +1,6 @@
 from plexapi.myplex import MyPlexAccount
 from plexapi.exceptions import NotFound, BadRequest
+import plexapi.server
 import logging
 import time
 
@@ -74,8 +75,34 @@ def remove_user(plex_account, user_email):
         logging.info(f"PLEXAPI: Removed {user_email} from shares on account: {plex_account.email}")
         return True
     except NotFound:
-        logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email}: not sharing with this user")
+        logging.error(
+            f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email}: not sharing with this user")
         return False
     except Exception as e:
-        logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email} due to unhandled exception: {e}")
+        logging.error(
+            f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email} due to unhandled exception: {e}")
         return False
+
+
+def get_users(plex_connections, account_email):
+    try:
+        logging.info(f"PLEXAPI: Gettings users from ")
+        users = {}
+        for account in plex_connections:
+            if account['account'].email == account_email:
+                for user in account['account'].users():
+                    print(user.email, user.username, user.id)
+                    users[user.id] = user.email
+        return users
+    except Exception as e:
+        logging.error(
+            f"PLEXAPI: Here's a generic error messages idiot {e}")
+        return users
+
+
+def get_history(plex_connections, account_id, account_email):
+    for account in plex_connections:
+        if account['account'].email == account_email:
+            for server in account['servers']:
+                history = server.history(accountID=account_id)
+                return history
