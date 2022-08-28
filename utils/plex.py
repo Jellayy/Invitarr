@@ -26,7 +26,7 @@ def create_connections(parser):
         # Log into account
         plex_account = plex_login(parser.get(f'Plex Account {x}', 'user'), parser.get(f'Plex Account {x}', 'password'))
         # Store account
-        plex_connections.append({"account": plex_account, "servers": []})
+        plex_connections.append({"account_email": parser.get(f'Plex Account {x}', 'user'), "account": plex_account, "servers": []})
 
         # For Each Server in Plex Account
         for y in range(int(parser.get(f'Plex Account {x}', 'num servers'))):
@@ -79,3 +79,15 @@ def remove_user(plex_account, user_email):
     except Exception as e:
         logging.error(f"PLEXAPI: Cannot remove {user_email} from shares on account: {plex_account.email} due to unhandled exception: {e}")
         return False
+
+
+def get_users(plex_account):
+    try:
+        users = []
+        for user in plex_account.users():
+            users.append({'id': user.id, 'email': user.email})
+        return users
+    except Exception as e:
+        logging.error(f"PLEXAPI: Unhandled exception in get_users: {e}")
+        return None
+

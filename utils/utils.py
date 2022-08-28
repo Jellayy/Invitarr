@@ -32,7 +32,8 @@ async def get_user_email(client, user):
 
 
 # Global method for adding user to share and overseerr
-def add_user(client, user_email, user_name, overseerr_enabled: bool = False, overseerr_api: str = None, overseerr_server: str = None):
+def add_user(client, user_email, user_name, overseerr_enabled: bool = False, overseerr_api: str = None,
+             overseerr_server: str = None):
     # Find the least crowded server
     optimal_server = plex.find_optimal_server(client.plex_connections)
     # Send Plex invite email
